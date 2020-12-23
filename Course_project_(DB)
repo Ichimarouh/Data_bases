@@ -1,0 +1,332 @@
+-- Данная база данных предназначена для отслеживания поступления и движения НКТ (насосно-компрессорных труб). Трубы поступают с завода-изготовителя. Дальше распределяются по скважинам. 
+-- После подъема НКТ по результату ревизии либо спускаются обратно, либо отправляются в ремонт. Каждая труба имеет свой заводской идентификационный номер. Также они имеют следующие характеристики:
+-- диаметр, группу прочности, тип резьбы, толщину стенки, марку стали, тип внутреннего полимерного покрытия, наработку (в сутках), тип муфты, завод-изготовитель, номер скважины и месторождение, 
+-- причины отбраковки при подъеме.
+
+DROP DATABASE IF EXISTS tubes;
+CREATE DATABASE tubes;
+
+USE tubes;
+
+DROP TABLE IF EXISTS tube;
+CREATE TABLE tube (
+tube_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "Идентификатор строки", 
+arrival DATE COMMENT "Дата поступления с завода-изготовителя",
+date_of_descend DATE COMMENT "Дата спуска в скважину",
+date_of_lift DATE COMMENT "Дата подъема из скважины",
+days_of_work INT AS (TO_DAYS(date_of_lift)-TO_DAYS(date_of_descend))
+) COMMENT "Основные параметры для отслеживания";
+
+INSERT INTO tube (tube_id, arrival, date_of_descend, date_of_lift) VALUES
+(1, '2015-01-27', '2015-03-18', '2015-06-16'),
+(2, '2015-01-28', '2015-04-28', '2017-10-05'),
+(3, '2015-01-29', '2015-03-14', '2016-08-18'),
+(4, '2015-01-30', '2015-04-06', '2017-05-04'),
+(5, '2015-01-31', '2015-03-17', '2017-11-23'),
+(6, '2015-02-01', '2015-04-19', '2016-10-12'),
+(7, '2015-02-02', '2015-02-27', '2017-11-10'),
+(8, '2015-02-03', '2015-02-15', '2016-07-23'),
+(9, '2015-02-04', '2015-03-21', '2017-05-18'),
+(10, '2015-02-05', '2015-04-02', '2017-08-01'),
+(11, '2015-02-06', '2015-05-06', '2017-02-03'),
+(12, '2015-02-07', '2015-04-26', '2017-06-19'),
+(13, '2015-02-08', '2015-02-20', '2016-02-12'),
+(14, '2015-02-09', '2015-03-04', '2015-08-10'),
+(15, '2015-02-10', '2015-03-27', '2016-06-25'),
+(16, '2015-02-11', '2015-04-08', '2015-08-09'),
+(17, '2015-02-12', '2015-05-12', '2017-07-09'),
+(18, '2015-02-13', '2015-05-22', '2015-10-17'),
+(19, '2015-02-14', '2015-04-07', '2017-11-14'),
+(20, '2015-02-15', '2015-04-06', '2015-07-05'),
+(21, '2015-02-16', '2015-05-17', '2017-10-24'),
+(22, '2015-02-17', '2015-04-02', '2016-09-06'),
+(23, '2015-02-18', '2015-04-25', '2017-05-23'),
+(24, '2015-02-19', '2015-04-05', '2017-12-12'),
+(25, '2015-02-20', '2015-05-08', '2016-10-31'),
+(26, '2015-02-21', '2015-03-18', '2017-11-29'),
+(27, '2015-02-22', '2015-03-06', '2016-08-11'),
+(28, '2015-02-23', '2015-04-09', '2017-06-06'),
+(29, '2015-02-24', '2015-04-21', '2017-08-20'),
+(30, '2015-02-25', '2015-05-25', '2017-02-22'),
+(31, '2015-02-26', '2015-05-15', '2017-07-08'),
+(32, '2015-02-27', '2015-03-11', '2016-03-02'),
+(33, '2015-02-28', '2015-03-23', '2015-08-29'),
+(34, '2015-03-01', '2015-04-15', '2015-07-14'),
+(35, '2015-03-02', '2015-04-27', '2017-10-04'),
+(36, '2015-03-03', '2015-05-31', '2016-11-04'),
+(37, '2015-03-04', '2015-06-10', '2017-07-08'),
+(38, '2015-03-05', '2015-04-26', '2018-01-02'),
+(39, '2015-03-06', '2015-04-25', '2016-10-18'),
+(40, '2015-03-07', '2015-06-05', '2018-02-16'),
+(41, '2015-03-08', '2015-04-21', '2016-09-26'),
+(42, '2015-03-09', '2015-05-14', '2017-07-11'),
+(43, '2015-03-10', '2015-04-24', '2017-08-23'),
+(44, '2015-03-11', '2015-05-27', '2017-02-24'),
+(45, '2015-03-12', '2015-04-06', '2017-05-30'),
+(46, '2015-03-13', '2015-03-25', '2016-03-16'),
+(47, '2015-03-14', '2015-04-28', '2015-10-04'),
+(48, '2015-03-15', '2015-05-10', '2016-08-08'),
+(49, '2015-03-16', '2015-06-13', '2015-10-14'),
+(50, '2015-03-17', '2015-06-03', '2017-07-31'),
+(51, '2015-03-18', '2015-03-30', '2015-06-28'),
+(52, '2015-03-19', '2015-04-11', '2017-09-18'),
+(53, '2015-03-20', '2015-05-04', '2016-10-08'),
+(54, '2015-03-21', '2015-05-16', '2017-06-13'),
+(55, '2015-03-22', '2015-06-19', '2018-02-25'),
+(56, '2015-03-23', '2015-06-29', '2016-12-22'),
+(57, '2015-03-24', '2015-05-15', '2018-01-26'),
+(58, '2015-03-25', '2015-05-14', '2016-10-19'),
+(59, '2015-03-26', '2015-06-24', '2017-08-21'),
+(60, '2015-03-27', '2015-05-10', '2017-09-08'),
+(61, '2015-03-28', '2015-06-02', '2017-03-02'),
+(62, '2015-03-29', '2015-05-13', '2017-07-06'),
+(63, '2015-03-30', '2015-06-15', '2016-06-06'),
+(64, '2015-03-31', '2015-04-25', '2015-10-01'),
+(65, '2015-04-01', '2015-04-13', '2016-07-12'),
+(66, '2015-04-02', '2015-05-17', '2015-08-15'),
+(67, '2015-04-03', '2015-05-29', '2017-11-05'),
+(68, '2015-04-04', '2015-07-02', '2016-12-06'),
+(69, '2015-04-05', '2015-06-22', '2017-07-20'),
+(70, '2015-04-06', '2015-04-18', '2017-12-25'),
+(71, '2015-04-07', '2015-04-30', '2016-10-23'),
+(72, '2015-04-08', '2015-05-23', '2018-02-03'),
+(73, '2015-04-09', '2015-06-04', '2016-11-09'),
+(74, '2015-04-10', '2015-07-08', '2017-09-04'),
+(75, '2015-04-11', '2015-07-18', '2017-11-16'),
+(76, '2015-04-12', '2015-06-03', '2017-03-03'),
+(77, '2015-04-13', '2015-06-02', '2017-07-26'),
+(78, '2015-04-14', '2015-07-13', '2016-07-04'),
+(79, '2015-04-15', '2015-05-29', '2015-11-04'),
+(80, '2015-04-16', '2015-06-21', '2016-09-19'),
+(81, '2015-04-17', '2015-06-01', '2015-10-02'),
+(82, '2015-04-18', '2015-07-04', '2017-08-31'),
+(83, '2015-04-19', '2015-06-08', '2015-09-06'),
+(84, '2015-04-20', '2015-07-19', '2017-12-26'),
+(85, '2015-04-21', '2015-06-04', '2016-11-08'),
+(86, '2015-04-22', '2015-06-27', '2017-07-25'),
+(87, '2015-04-23', '2015-06-07', '2018-02-13'),
+(88, '2015-04-24', '2015-07-10', '2017-01-02'),
+(89, '2015-04-25', '2015-05-20', '2018-01-31'),
+(90, '2015-04-26', '2015-05-08', '2016-10-13'),
+(91, '2015-04-27', '2015-06-11', '2017-08-08'),
+(92, '2015-04-28', '2015-06-23', '2017-10-22'),
+(93, '2015-04-29', '2015-07-27', '2017-04-26'),
+(94, '2015-04-30', '2015-07-17', '2017-09-09'),
+(95, '2015-05-01', '2015-05-13', '2016-05-04'),
+(96, '2015-05-02', '2015-05-25', '2015-10-31'),
+(97, '2015-05-03', '2015-06-17', '2016-09-15'),
+(98, '2015-05-04', '2015-06-29', '2015-10-30'),
+(99, '2015-05-05', '2015-08-02', '2017-09-29'),
+(100, '2015-05-06', '2015-08-12', '2016-01-07');
+
+DROP TABLE IF EXISTS diameters;
+CREATE TABLE diameters (
+id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "Идентификатор строки", 
+diameter TINYINT UNSIGNED COMMENT "Значение диаметра в миллиметрах"
+) COMMENT "Диаметр НКТ, мм";
+
+INSERT INTO diameters (diameter) VALUES
+('48'),
+('60'),
+('73'),
+('89'),
+('102'),
+('114');
+
+ALTER TABLE diameters
+ADD CONSTRAINT diameters_tube_fk 
+FOREIGN KEY (id) REFERENCES tube(tube_id)
+ON DELETE CASCADE;
+
+DROP TABLE IF EXISTS group_of_strength;
+CREATE TABLE group_of_strength (
+id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "Идентификатор строки", 
+group_of_strength CHAR(5)
+) COMMENT "Группа прочности НКТ";
+
+ALTER TABLE group_of_strength
+ADD CONSTRAINT tube_group_of_strength_fk 
+FOREIGN KEY (id) REFERENCES tube(tube_id)
+ON DELETE CASCADE;
+
+INSERT INTO group_of_strength (group_of_strength) VALUES
+('J-55'),
+('K-72'),
+('N-80'),
+('L-80'),
+('C-95'),
+('P-110'),
+('Q-135');
+
+DROP TABLE IF EXISTS type_of_thread;
+CREATE TABLE type_of_thread (
+id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "Идентификатор строки", 
+type_of_thread VARCHAR(32)
+) ENGINE = InnoDB DEFAULT CHARSET=cp1251 COMMENT "Тип резьбы";
+
+INSERT INTO type_of_thread (type_of_thread) VALUES
+('Треугольная'),
+('Трапецеидальная'),
+('Премиум');
+
+ALTER TABLE type_of_thread
+ADD CONSTRAINT tube_type_of_thread_fk 
+FOREIGN KEY (id) REFERENCES tube(tube_id)
+ON DELETE CASCADE;
+
+DROP TABLE IF EXISTS thickness;
+CREATE TABLE thickness (
+id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "Идентификатор строки", 
+thickness TINYINT UNSIGNED COMMENT "Значение толщины стенки в миллиметрах"
+) COMMENT "Толщина стенки, мм";
+
+ALTER TABLE thickness
+ADD CONSTRAINT tube_thickness_fk 
+FOREIGN KEY (id) REFERENCES tube(tube_id)
+ON DELETE CASCADE;
+
+INSERT INTO thickness (thickness) VALUES
+('4'),
+('5.5'),
+('6.45'),
+('7');
+
+DROP TABLE IF EXISTS steel_grade;
+CREATE TABLE steel_grade (
+id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "Идентификатор строки", 
+steel_grade CHAR(20) COMMENT "Марка стали"
+) ENGINE = InnoDB DEFAULT CHARSET=cp1251 COMMENT "Марка стали";
+
+ALTER TABLE steel_grade
+ADD CONSTRAINT tube_steel_grade_fk 
+FOREIGN KEY (id) REFERENCES tube(tube_id)
+ON DELETE CASCADE;
+
+INSERT INTO steel_grade (steel_grade) VALUES
+('25ГЮ'),
+('32Г'),
+('38ГСФ4А'),
+('18ХМФБ'),
+('15ХГМФ');
+
+DROP TABLE IF EXISTS coating_type;
+CREATE TABLE coating_type (
+id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "Идентификатор строки", 
+coating_type CHAR(10) COMMENT "Тип покрытия"
+) ENGINE = InnoDB DEFAULT CHARSET=cp1251 COMMENT "Тип покрытия";
+
+ALTER TABLE coating_type
+ADD CONSTRAINT tube_coating_type_fk 
+FOREIGN KEY (id) REFERENCES tube(tube_id)
+ON DELETE CASCADE;
+
+INSERT INTO coating_type (coating_type) VALUES
+(''),
+('Тип-1'),
+('Тип-2'),
+('Тип-3'),
+('Тип-4');
+
+DROP TABLE IF EXISTS type_of_coupling;
+CREATE TABLE type_of_coupling (
+id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "Идентификатор строки", 
+type_of_coupling CHAR(20) COMMENT "Тип муфты"
+) ENGINE = InnoDB DEFAULT CHARSET=cp1251 COMMENT "Тип муфты";
+
+ALTER TABLE type_of_coupling
+ADD CONSTRAINT tube_type_of_coupling_fk 
+FOREIGN KEY (id) REFERENCES tube(tube_id)
+ON DELETE CASCADE;
+
+INSERT INTO type_of_coupling (type_of_coupling) VALUES
+('Фосфатированная'),
+('Оцинкованная');
+
+DROP TABLE IF EXISTS factory;
+CREATE TABLE factory (
+id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "Идентификатор строки", 
+factory CHAR(20) COMMENT "Завод-изготовитель"
+) ENGINE = InnoDB DEFAULT CHARSET=cp1251 COMMENT "Завод-изготовитель";
+
+ALTER TABLE factory
+ADD CONSTRAINT tube_factory_fk 
+FOREIGN KEY (id) REFERENCES tube(tube_id)
+ON DELETE CASCADE;
+
+INSERT INTO factory (factory) VALUES
+('ПАО \'ТМК\''),
+('ПАО \'ЧТПЗ\''),
+('ОАО \'ВрТЗ\'');
+
+DROP TABLE IF EXISTS kind_of_defect;
+CREATE TABLE kind_of_defect (
+id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "Идентификатор строки", 
+kind_of_defect CHAR(40)NOT NULL COMMENT "Причина отбраковки"
+) ENGINE = InnoDB DEFAULT CHARSET=cp1251 COMMENT "Причина отбраковки";
+
+ALTER TABLE kind_of_defect
+ADD CONSTRAINT tube_kind_of_defect_fk 
+FOREIGN KEY (id) REFERENCES tube(tube_id)
+ON DELETE CASCADE;
+
+INSERT INTO kind_of_defect (kind_of_defect) VALUES
+('Коррозионный износ'),
+('Эрозионный износ'),
+('Отложение парафина'),
+('Солеотложения'),
+('Нарушение геометрии профиля резьбы'),
+('Механические повреждения');
+
+DROP TABLE IF EXISTS location;
+CREATE TABLE location (
+id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "Идентификатор строки", 
+location CHAR(30) COMMENT "Месторасположение трубы"
+) ENGINE = InnoDB DEFAULT CHARSET=cp1251 COMMENT "Месторасположение трубы";
+
+ALTER TABLE location
+ADD CONSTRAINT tube_location_fk 
+FOREIGN KEY (id) REFERENCES tube(tube_id)
+ON DELETE CASCADE;
+
+INSERT INTO location (location) VALUES
+('На трубной площадке'),
+('В скважине'),
+('На ремонтном предприятии');
+
+DROP TABLE IF EXISTS number_of_well;
+CREATE TABLE number_of_well (
+id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "Идентификатор строки", 
+number_of_well TINYINT COMMENT "Номер скважины"
+) COMMENT "Номер скважины";
+
+ALTER TABLE number_of_well
+ADD CONSTRAINT tube_number_of_well_fk 
+FOREIGN KEY (id) REFERENCES tube(tube_id)
+ON DELETE CASCADE;
+
+DROP TABLE IF EXISTS oil_field;
+CREATE TABLE oil_field (
+id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "Идентификатор строки", 
+oil_field CHAR(15) COMMENT "Месторождение"
+) ENGINE = InnoDB DEFAULT CHARSET=cp1251 COMMENT "Месторождение";
+
+ALTER TABLE oil_field
+ADD CONSTRAINT tube_oil_field_fk 
+FOREIGN KEY (id) REFERENCES tube(tube_id)
+ON DELETE CASCADE;
+
+INSERT INTO oil_field (oil_field) VALUES
+('Снежное'),
+('Хвойное'),
+('Речное'),
+('Клюквенное'),
+('Кедровое');
+
+ALTER TABLE tube ADD COLUMN diameter TINYINT UNSIGNED;
+
+INSERT INTO tube (diameter) VALUES (SELECT diameter FROM tubes.diameters ORDER BY RAND() LIMIT 1);
+
+
+
+
+
